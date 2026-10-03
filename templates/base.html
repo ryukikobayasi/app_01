@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}移動時間計測{% endblock %}</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; color: #1f2937; background: #f3f4f6; }
+    body { margin: 0; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem max(1rem, calc((100% - 900px) / 2)); background: #1d4ed8; color: white; }
+    header a { color: white; text-decoration: none; font-weight: 700; }
+    main { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; box-shadow: 0 2px 8px #0001; }
+    form { display: grid; gap: .75rem; }
+    label { font-weight: 600; }
+    input, button { box-sizing: border-box; width: 100%; padding: .7rem; border: 1px solid #d1d5db; border-radius: 7px; font-size: 1rem; }
+    button { border: 0; background: #2563eb; color: white; cursor: pointer; font-weight: 700; }
+    button.secondary { background: #374151; width: auto; }
+    button.danger { background: #dc2626; padding: .45rem .7rem; white-space: nowrap; }
+    .inline { display: flex; gap: .75rem; align-items: end; }
+    .inline > * { flex: 1; }
+    .flash { padding: .75rem 1rem; border-radius: 7px; margin-bottom: 1rem; }
+    .flash.error { background: #fee2e2; color: #991b1b; }
+    .flash.success { background: #dcfce7; color: #166534; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #e5e7eb; padding: .75rem .4rem; text-align: left; }
+    .muted { color: #6b7280; }
+    @media (max-width: 600px) { .inline { display: grid; } table { font-size: .85rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="{{ url_for('dashboard') }}">移動時間計測</a>
+    {% if g.user %}
+      <form method="post" action="{{ url_for('logout') }}" style="display:inline">
+        <button class="secondary" type="submit">ログアウト</button>
+      </form>
+    {% endif %}
+  </header>
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

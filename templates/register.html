@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}新規登録 - 移動時間計測{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>新規登録</h1>
+  <form method="post">
+    <label for="username">ユーザー名</label>
+    <input id="username" name="username" required autocomplete="username">
+    <label for="password">パスワード（8文字以上）</label>
+    <input id="password" name="password" type="password" minlength="8" required autocomplete="new-password">
+    <button type="submit">登録</button>
+  </form>
+  <p class="muted">登録済みの場合は<a href="{{ url_for('login') }}">ログイン</a></p>
+</section>
+{% endblock %}

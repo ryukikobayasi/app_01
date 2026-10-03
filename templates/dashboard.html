@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}ダッシュボード - 移動時間計測{% endblock %}
+{% block content %}
+<h1>こんにちは、{{ g.user["username"] }}さん</h1>
+
+{% if active_trip %}
+<section class="card">
+  <h2>計測中</h2>
+  <p><strong>タイトル：</strong>{{ active_trip["title"] or "（タイトルなし）" }}</p>
+  <p><strong>開始地点：</strong>{{ active_trip["start_place"] }}</p>
+  <p class="muted">開始時刻：{{ active_trip["started_at"]|replace("T", " ")|replace("+00:00", " UTC") }}</p>
+  <form method="post" action="{{ url_for('finish_trip', trip_id=active_trip['id']) }}">
+    <label for="end_place">終了地点</label>
+    <div class="inline">
+      <input id="end_place" name="end_place" placeholder="例：東京駅" required>
+      <button type="submit">計測を終了</button>
+    </div>
+  </form>
+</section>
+{% else %}
+<section class="card">
+  <h2>新しい計測</h2>
+  <form method="post" action="{{ url_for('start_trip') }}">
+    <label for="title">タイトル</label>
+    <input id="title" name="title" placeholder="例：通勤、出張" required>
+    <label for="start_place">開始地点</label>
+    <div class="inline">
+      <input id="start_place" name="start_place" placeholder="例：自宅" required>
+      <button type="submit">計測を開始</button>
+    </div>
+  </form>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>計測履歴</h2>
+  {% if trips %}
+  <table>
+    <thead><tr><th>タイトル</th><th>開始地点</th><th>終了地点</th><th>時間</th><th>操作</th></tr></thead>
+    <tbody>
+      {% for trip in trips %}
+      <tr>
+        <td>{{ trip["title"] or "（タイトルなし）" }}</td>
+        <td>{{ trip["start_place"] }}</td>
+        <td>{{ trip["end_place"] }}</td>
+        <td>{{ trip["duration_seconds"]|duration }}</td>
+        <td>
+          <form method="post" action="{{ url_for('delete_trip', trip_id=trip['id']) }}"
+                onsubmit="return confirm('この履歴を削除しますか？');">
+            <button type="submit" class="danger">削除</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="muted">まだ計測履歴はありません。</p>
+  {% endif %}
+</section>
+{% endblock %}
